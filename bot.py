@@ -308,8 +308,9 @@ async def setstat(ctx, status=None, *, game=None):
                 if s:
                         await bot.change_presence(status=s, game=current_game)
                         await bot.say("Successfully changed the status to `{}`".format(status))
-
-
+                        
 if not os.environ.get('TOKEN'):
         print("No token found REEEE!")
     bot.run(os.environ.get('TOKEN').strip('\"'))
+
+                       
