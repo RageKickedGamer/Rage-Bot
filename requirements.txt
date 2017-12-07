@@ -1,0 +1,7 @@
+discord.py
+asyncio
+os
+time
+datetime
+random
+youtube_dl
