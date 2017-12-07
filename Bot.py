@@ -9,6 +9,7 @@ import asyncio
 import time
 import datetime
 import youtube_dl
+import os
 
 bot = commands.Bot(command_prefix = 'r.')
 tu = datetime.datetime.now()
@@ -309,5 +310,6 @@ async def setstat(ctx, status=None, *, game=None):
                         await bot.say("Successfully changed the status to `{}`".format(status))
 
 
-
-bot.run("TOKEN")
+if not os.environ.get('TOKEN'):
+        print("No token found REEEE!")
+    bot.run(os.environ.get('TOKEN').strip('\"'))
