@@ -311,6 +311,6 @@ async def setstat(ctx, status=None, *, game=None):
                         
 if not os.environ.get('TOKEN'):
         print("No token found REEEE!")
-    bot.run(os.environ.get('TOKEN').strip('\"'))
+bot.run(os.environ.get('TOKEN').strip('\"'))
 
                        
