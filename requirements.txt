@@ -1,6 +1,5 @@
 discord.py
 asyncio
-os
 time
 datetime
 random
