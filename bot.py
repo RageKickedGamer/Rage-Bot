@@ -9,9 +9,8 @@ import asyncio
 import time
 import datetime
 import youtube_dl
-import os
 
-bot = commands.Bot(command_prefix = 'r.')
+bot = commands.Bot(command_prefix = 'rt')
 tu = datetime.datetime.now()
 
 @bot.event
@@ -24,7 +23,7 @@ async def on_ready():
     print('User Count:',len(set(bot.get_all_members())))
     print("Py Lib Version: %s"%discord.__version__)
     print("===================================")
-    await bot.change_presence(game=discord.Game(name='rhelp | 1 Servers | 0 Members!!'))
+    await bot.change_presence(game=discord.Game(name='Coding Rage BOT'))
 
 @bot.command(pass_context=True)
 async def ping(ctx):
@@ -41,6 +40,7 @@ async def ping(ctx):
 
 @bot.command(pass_context=True)
 async def lockdown(ctx):
+    """Locks Down The Channel.Admin Only Chat"""
     user_roles = [r.name.lower() for r in ctx.message.author.roles]
 
     if "admin" not in user_roles:
@@ -60,6 +60,7 @@ async def lockdown(ctx):
 
 @bot.command(pass_context=True)
 async def unlock(ctx):
+    """Unlocks Lockdown. Everyone Can Chat"""
     user_roles = [r.name.lower() for r in ctx.message.author.roles]
 
     if "admin" not in user_roles:
@@ -293,6 +294,7 @@ def timedelta_str(dt):
 
 @bot.command(pass_context = True, no_pm = True)
 async def announce(ctx, *, announcement: str):
+    """Sends an Embed Titled Announcement"""
     user_roles = [r.name.lower() for r in ctx.message.author.roles]
 
     if "admin" not in user_roles:
@@ -327,6 +329,7 @@ async def avatar(ctx):
 
 @bot.command(no_pm=True, pass_context=True)
 async def remrole(ctx, rolename, user: discord.Member=None):
+    """Removes a Role From a Specified Person"""
     user_roles = [r.name.lower() for r in ctx.message.author.roles]
 
     if "admin" not in user_roles:
@@ -355,21 +358,22 @@ async def remrole(ctx, rolename, user: discord.Member=None):
 
 @bot.command(pass_context=True)
 async def setstat(ctx, status=None, *, game=None):
-        if ctx.message.author.id == ("342853951353520128"):
-            statuses = {
-                "online": discord.Status.online,
-                "idle": discord.Status.idle,
-                "dnd": discord.Status.dnd,
-                "invis": discord.Status.invisible
-                }
+    """Sets The Bots Stats"""
+    if ctx.message.author.id == ("342853951353520128"):
+        statuses = {
+            "online": discord.Status.online,
+            "idle": discord.Status.idle,
+            "dnd": discord.Status.dnd,
+            "invis": discord.Status.invisible
+            }
 
-        current_game = ctx.message.server.me.game if ctx.message.server is not None else None
+    current_game = ctx.message.server.me.game if ctx.message.server is not None else None
         
-        if status is not None and game is None:
-                s = statuses.get(status.lower(), None)
-                if s:
-                        await bot.change_presence(status=s, game=current_game)
-                        await bot.say("Successfully changed the status to `{}`".format(status))
+    if status is not None and game is None:
+            s = statuses.get(status.lower(), None)
+            if s:
+                    await bot.change_presence(status=s, game=current_game)
+                    await bot.say("Successfully changed the status to `{}`".format(status))
                         
 if not os.environ.get('TOKEN'):
         print("No token found REEEE!")
