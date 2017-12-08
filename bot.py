@@ -9,8 +9,9 @@ import asyncio
 import time
 import datetime
 import youtube_dl
+import os
 
-bot = commands.Bot(command_prefix = 'rt')
+bot = commands.Bot(command_prefix = 'r.')
 tu = datetime.datetime.now()
 
 @bot.event
