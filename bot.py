@@ -39,6 +39,66 @@ async def ping(ctx):
 
     await bot.say(embed=data)
 
+@bot.command(pass_context=True)
+async def lockdown(ctx):
+    user_roles = [r.name.lower() for r in ctx.message.author.roles]
+
+    if "admin" not in user_roles:
+        return await bot.say("**You Do Not Have The Permissions To Do This!**")
+    pass
+
+    try:
+        overwrites_everyone = ctx.message.channel.overwrites_for(ctx.message.server.default_role)
+        if overwrites_everyone.send_messages == False:
+            await bot.say("Channel is already locked down. Use `r.unlock` to unlock.")
+            return
+        overwrites_everyone.send_messages = False
+        await bot.edit_channel_permissions(ctx.message.channel, ctx.message.server.default_role, overwrites_everyone)
+        await bot.say("Channel Is :lock: . Only Admins May Speak. Do Not Talk about It In Other Channels!")
+    except discord.errors.Forbidden:
+        await bot.say("**I Don't Have 'Permission' To Do This.**")
+
+@bot.command(pass_context=True)
+async def unlock(ctx):
+    user_roles = [r.name.lower() for r in ctx.message.author.roles]
+
+    if "admin" not in user_roles:
+        return await bot.say("**You Do Not Have The Permissions To Do This!**")
+    pass
+
+    try:
+        overwrites_everyone = ctx.message.channel.overwrites_for(ctx.message.server.default_role)
+        overwrites_staff = ctx.message.channel.overwrites_for(discord.utils.get(ctx.message.server.roles, name="Admin"))
+        if overwrites_everyone.send_messages == None:
+            await bot.say("Channel is already unlocked.")
+            return
+        overwrites_everyone.send_messages = None
+        overwrites_staff.send_messages = True
+        await bot.edit_channel_permissions(ctx.message.channel, ctx.message.server.default_role, overwrites_everyone)
+        await bot.edit_channel_permissions(ctx.message.channel, discord.utils.get(ctx.message.server.roles, name="Admin"), overwrites_staff)
+        await bot.say("Channel unlocked.")
+    except discord.errors.Forbidden:
+        await bot.say("**I Don't Have 'Permission' To Do This.**")
+
+@bot.command(pass_context=True)
+async def feedback(ctx, *, message : str):
+    """Send Feedback To ME!!!"""
+    owner = discord.utils.get(bot.get_all_members(), id="342853951353520128")
+    server = ctx.message.server
+    author = ctx.message.author
+    footer = "User ID: " + author.id + " | Server ID: " + server.id
+    source = "From {}".format(server)
+
+    colour = discord.Colour.green()
+
+    description = "Sent by {} {}".format(author, source)
+
+    msg = discord.Embed(colour=colour, description=message)
+    msg.set_author(name=description)
+    msg.set_footer(text=footer)
+
+    await bot.send_message(owner, embed=msg)
+
 @bot.command()
 async def userinfo(member : discord.Member):
     """Says when a member joined."""
@@ -233,13 +293,15 @@ def timedelta_str(dt):
 
 @bot.command(pass_context = True, no_pm = True)
 async def announce(ctx, *, announcement: str):
-    if ctx.message.author.server_permissions.administrator:
-     """Sends an announcement in the channel you use the command"""
+    user_roles = [r.name.lower() for r in ctx.message.author.roles]
+
+    if "admin" not in user_roles:
+        return await bot.say("**You Do Not Have Permissions To Do That!**")
+    pass
+
     embed=discord.Embed(title = "__Announcement__", description= announcement, color = 0xFF0000)
     await bot.delete_message(ctx.message)
     await bot.say(embed = embed)
-    if not ctx.message.author.server_permissions.administrator:
-        await bot.say("**You Do Not Have Permissions To Do That!**")
 
 @bot.command(pass_context=True)
 async def rr(ctx):
