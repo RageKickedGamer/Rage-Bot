@@ -223,7 +223,7 @@ async def kill(ctx, member: discord.Member = None, seconds: int=5):
         await bot.say(member.mention + " Is Now Dead! :smiling_imp:")
 
 @bot.command(pass_context = True)
-async def shutdown(ctx):
+async def restart(ctx):
     '''Turns Bot Offline (Dev. Command Only)'''
     author = ("342853951353520128")
     if author == ctx.message.author.id:
