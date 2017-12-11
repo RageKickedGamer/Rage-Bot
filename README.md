@@ -1,2 +1,2 @@
 # rage-bot
-My Personal Bot For My Discord Server, But The Code is Free To Use (Just Mention me)
+My Personal Bot For My Discord Server, But The Code is Free To Use (Just Mention me) Check out My Youtube channel @RageKickedgamer
