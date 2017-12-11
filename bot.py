@@ -327,6 +327,32 @@ async def avatar(ctx):
     em.add_field(name="\a", value=(":globe_with_meridians: Download avatar [here!]({})".format(author.avatar_url)))
     em.set_thumbnail(url=author.avatar_url)
     await bot.say(embed=em)
+    
+@bot.command(no_pm=True, pass_context=True)
+async def addrole(ctx, rolename, user: discord.Member=None):
+    user_roles = [r.name.lower() for r in ctx.message.author.roles]
+
+    if "admin" not in user_roles:
+        return await client.say("**You Do Not Have Permissions To Do That!**")
+    pass
+
+    author = ctx.message.author
+    channel = ctx.message.channel
+    server = ctx.message.server
+    role = discord.utils.find(lambda r: r.name.lower() == rolename.lower(), ctx.message.server.roles)
+    if user is None:
+        user = author
+
+    if role is None:
+        await bot.say('That role cannot be found.')
+        return
+
+    if not channel.permissions_for(server.me).manage_roles:
+        await bot.say('I don\'t have manage_roles.')
+        return
+
+    await bot.add_roles(user, role)
+    await bot.say('Added role {} to {}'.format(role.name, user.name))
 
 @bot.command(no_pm=True, pass_context=True)
 async def remrole(ctx, rolename, user: discord.Member=None):
