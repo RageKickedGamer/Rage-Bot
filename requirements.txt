@@ -2,3 +2,4 @@ discord.py
 asyncio
 datetime
 youtube_dl
+discord.py[voice]
