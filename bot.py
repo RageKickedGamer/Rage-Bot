@@ -401,6 +401,24 @@ async def setstat(ctx, status=None, *, game=None):
             if s:
                     await bot.change_presence(status=s, game=current_game)
                     await bot.say("Successfully changed the status to `{}`".format(status))
+                    
+@bot.command(pass_context=True)
+async def poll(ctx,*, message: str):
+    embed = discord.Embed(color = ctx.message.author.color, timestamp = datetime.datetime.utcnow())
+    embed.set_author(name = "Poll", icon_url = ctx.message.author.avatar_url)
+    embed.description = (message)
+    embed.set_footer(text = ctx.message.author.name)
+    x = await bot.say(embed = embed)
+    await bot.add_reaction(x, "👍")
+    await bot.add_reaction(x, "\U0001f937")
+    await bot.add_reaction(x, "👎")
+    
+@bot.command(pass_context = True)
+async def now(ctx):
+    date = datetime.datetime.now().strftime("**Date: **%A, %B %d, %Y\n**Time: **%I:%M %p")
+    embed = discord.Embed(color = embed_color)
+    embed.add_field(name="Bot's System Date & Time", value=date, inline=False)
+    await bot.say(embed=embed)
                         
 if not os.environ.get('TOKEN'):
         print("No token found REEEE!")
