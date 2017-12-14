@@ -416,7 +416,9 @@ async def poll(ctx,*, message: str):
 @bot.command(pass_context = True)
 async def now(ctx):
     date = datetime.datetime.now().strftime("**Date: **%A, %B %d, %Y\n**Time: **%I:%M %p")
-    embed = discord.Embed(color = embed_color)
+    colour = ''.join([random.choice('0123456789ABCDEF') for x in range(6)])
+    colour = int(colour, 16)
+    embed = discord.Embed(description= "Datetime" , colour=discord.Colour(value=colour))
     embed.add_field(name="Bot's System Date & Time", value=date, inline=False)
     await bot.say(embed=embed)
                         
