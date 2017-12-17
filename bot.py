@@ -449,7 +449,86 @@ async def count(ctx):
     users = len(set(bot.get_all_members()))
     servers = len(bot.servers)
     await bot.say("**I'm in {} Servers and with {} Members and counting!** You Can Add Me By Typing 'r.botinfo'".format(servers, users))
-                        
+    
+@bot.command(pass_context=True)
+async def guess(ctx):
+    """Allows user to guess a "randomly" generated 1 to 10 digit."""
+    author = ctx.message.author
+
+    await bot.say(
+        ('<@{}> Guess a number between 1 to 10 (Answer within 20 seconds)' +
+         ' [Make sure to mention me!]')
+        .format(author.id))
+
+    start_string = '<@{}>'.format(str(bot.user.id))
+    start_string2 = '<@!{}>'.format(str(bot.user.id))
+
+    def format_response(m):
+        m = m.strip(' ')
+        if m.startswith(start_string):
+            m = m[len(start_string):].strip(' ')
+        else:
+             m = m[len(start_string2):].strip(' ')
+        return m
+
+    def guess_check(m):
+        m = m.content.strip(' ')
+        print("Checking Guess...")
+        if m.startswith(start_string) or m.startswith(start_string2):
+            print("Startswith...")
+            m = format_response(m)
+            return m.isdigit()
+        else:
+            return False
+
+    guess = await bot.wait_for_message(timeout=20.0, author=author,
+                                          check=guess_check)
+
+    answer = random.randint(1, 10)
+    if guess is None:
+        fmt = ('Sorry <@{}> , you took too long. It was {}.'
+               .format(str(author.id), answer))
+        await bot.say(fmt)
+        return
+
+    guess_text = format_response(guess.content)
+    if int(guess_text) == answer:
+        fmt = ('You are right, <@{}>!').format(str(author.id))
+        await bot.say(fmt)
+    else:
+        fmt = ('Sorry, <@{}>. It is actually {}.'
+               .format(str(author.id), answer))
+        await bot.say(fmt)
+
+@bot.command(pass_context=True)
+async def purge(ctx):
+    user_roles = [r.name.lower() for r in ctx.message.author.roles]
+
+    if "admin" not in user_roles:
+        return await bot.say("**You Dont Have Permissions To Do That!**")
+    pass
+
+    await bot.say("Are you sure you want to clear the channel's history, yes or no?")
+    response = await bot.wait_for_message(timeout=10, author=ctx.message.author, channel=ctx.message.channel)
+    response = response.content.lower()
+    if response == "yes" or response == "y":
+        await bot.purge_from(ctx.message.channel, limit=99999)
+
+@bot.command(pass_context=True)
+async def roleinfo(ctx, *,role: discord.Role):
+    embed = discord.Embed(color = role.color)
+    embed.set_author(name = "The role info")
+    embed.add_field(name = "Role Name", value = format(role.name))
+    embed.add_field(name = "Role ID", value = format(role.id))
+    embed.add_field(name = "For Server", value = format(role.server))
+    embed.add_field(name = "Hoist", value = format(role.hoist))
+    embed.add_field(name = "Role Position", value = format(role.position))
+    embed.add_field(name = "Mentionable Role", value = format(role.mentionable))
+    embed.add_field(name = "Role Created At", value = format(role.created_at))
+    embed.set_footer(text="Rage Bot v1.0")
+    await bot.say(embed = embed)
+    
+        
 if not os.environ.get('TOKEN'):
         print("No token found REEEE!")
 bot.run(os.environ.get('TOKEN').strip('\"'))
