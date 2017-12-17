@@ -423,14 +423,32 @@ async def poll(ctx,*, message: str):
     await bot.add_reaction(x, "\U0001f937")
     await bot.add_reaction(x, "👎")
     
+@bot.command()
+async def botinfo():
+    """Get Info About The Bot"""
+    em = discord.Embed(color=0xea7938) #0xea7938 is the color code
+    em.add_field(name='Bot Info', value="This bot was created with the library Discord.py\n If you need any help or questions, join the [devs' server](https://discord.gg/km9Yudr)")
+    em.add_field(name='Total Commands', value=(len(bot.commands)))
+    em.add_field(name = 'Add Me On Steam', value = '[Steam](http://steamcommunity.com/id/RageKickedGamer/)')
+    em.add_field(name = 'Invite Me!', value = '[Click Here](https://discordbots.org/bot/386637469438836738)')
+    em.set_footer(text="Rage Bot v1.0")
+    await bot.say(embed = em)
+
 @bot.command(pass_context = True)
-async def now(ctx):
-    date = datetime.datetime.now().strftime("**Date: **%A, %B %d, %Y\n**Time: **%I:%M %p")
-    colour = ''.join([random.choice('0123456789ABCDEF') for x in range(6)])
-    colour = int(colour, 16)
-    embed = discord.Embed(description= "Datetime" , colour=discord.Colour(value=colour))
-    embed.add_field(name="Bot's System Date & Time", value=date, inline=False)
-    await bot.say(embed=embed)
+async def gbans(ctx):
+    '''Gets A List Of Users Who Are No Longer With us'''
+    x = await bot.get_bans(ctx.message.server)
+    x = '\n'.join([y.name for y in x])
+    embed = discord.Embed(title = "List of The Banned Idiots", description = x, color = 0xFFFFF)
+    embed.set_footer(text="Rage Bot v1.0")
+    return await bot.say(embed = embed)
+
+@bot.command(pass_context=True)
+async def count(ctx):
+    """The Amout of users/servers"""
+    users = len(set(bot.get_all_members()))
+    servers = len(bot.servers)
+    await bot.say("**I'm in {} Servers and with {} Members and counting!** You Can Add Me By Typing 'r.botinfo'".format(servers, users))
                         
 if not os.environ.get('TOKEN'):
         print("No token found REEEE!")
