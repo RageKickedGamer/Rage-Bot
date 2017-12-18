@@ -528,6 +528,60 @@ async def roleinfo(ctx, *,role: discord.Role):
     embed.set_footer(text="Rage Bot v1.0")
     await bot.say(embed = embed)
     
+@bot.command(pass_context = True)
+async def warn(ctx, user : discord.Member = None, *, reason = ""):
+    '''Warns a USer With a reason (Admin Only)'''
+    user_roles = [r.name.lower() for r in ctx.message.author.roles]
+
+    if "admin" in user_roles:
+        if user is None:
+            return await ctx.send(":x: | Please specify a **member** to **__warn__**")
+        if reason is None:
+            return await ctx.send(":x: | You must have a **reason** specified")
+        else:
+            embed=discord.Embed(title="Log - Warning")
+            embed.add_field(name="User:", value=user, inline=False)
+            embed.add_field(name="UserID:", value=user.id, inline=False)
+            embed.add_field(name="Reason:", value=reason, inline=False)
+            embed.add_field(name="ModeratorID:", value=ctx.message.author.id, inline=False)
+            embed.add_field(name="Moderator:", value=ctx.message.author, inline=False)
+            embed.set_footer(text="Rage BOT  | Made by the RageKickedGamer#2406")
+            await bot.send_message(discord.utils.get(ctx.message.server.channels, name="logs"), embed = embed)
+            await bot.say(":white_check_mark:  | Warned `{}`!".format(user))
+            embed=discord.Embed(title="Warning!")
+            embed.add_field(name="User:", value=user, inline=False)
+            embed.add_field(name="UserID:", value=user.id, inline=False)
+            embed.add_field(name="Reason:", value=reason, inline=False)
+            embed.add_field(name="ModeratorID:", value=ctx.message.author.id, inline=False)
+            embed.add_field(name="Moderator:", value=ctx.message.author, inline=False)
+            embed.set_footer(text="Rage BOT  | Made by the RageKickedGamer#2406")
+            await bot.say(embed=embed)
+    else:
+        msg = ':eyes: | {} Tried to use warn | ID: {}'.format(ctx.message.author, ctx.message.author.id)
+        await bot.send_message(discord.utils.get(ctx.message.server.channels, name="logs"), msg)
+        await bot.say(":x: | Admin Only! | Action has been logged!")
+
+@bot.command(pass_context = True)
+async def msg(ctx, user : discord.Member = None, *, message : str = None):
+    '''Send a user a Msg (Admin Only)'''
+    user_roles = [r.name.lower() for r in ctx.message.author.roles]
+
+    if "admin" in user_roles:
+        if user is None:
+            return await bot.say(":x: | Please specify a **member** to **__message__**")
+        if message is None:
+            return await bot.say(":x: | You must have a **message**")
+        else:
+            embed=discord.Embed(title="Moderator Message", description="Do not reply we will not recieve the message")
+            embed.set_author(name="A Message From The Admin")
+            embed.add_field(name="Message:", value=message, inline=False)
+            embed.set_footer(text="Rage BOT  | Made by the RageKickedGamer#2406")
+            await bot.send_message(user, embed=embed)
+            await bot.say(":white_check_mark: | User Has Been Msg'd")
+    else:
+        msg = ':eyes: | {} Tried to use msg | ID: {}'.format(ctx.message.author, ctx.message.author.id)
+        await bot.send_message(discord.utils.get(ctx.message.server.channels, name="logs"), msg)
+        await bot.say(":x: | Admin Only! | Action has been logged!")
         
 if not os.environ.get('TOKEN'):
         print("No token found REEEE!")
