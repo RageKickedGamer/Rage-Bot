@@ -343,7 +343,7 @@ async def addrole(ctx, rolename, user: discord.Member=None):
     user_roles = [r.name.lower() for r in ctx.message.author.roles]
 
     if "admin" not in user_roles:
-        return await client.say("**You Do Not Have Permissions To Do That!**")
+        return await bot.say("**You Do Not Have Permissions To Do That!**")
     pass
 
     author = ctx.message.author
